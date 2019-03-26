@@ -20,8 +20,7 @@ if (prod === 'dev') {
   _localapiroute = 'http://localhost:8000/api/'
   _pub = 'http://localhost:8080/'
   _loginchecker =  'http://localhost:8000/api/'
-  _storage = 'http://localhost:8000/storage/'
-
+  _storage = 'https://quiet-falls-24566.herokuapp.com/storage/'
 }
 
 if (prod === 'live') {
