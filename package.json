@@ -1,0 +1,39 @@
+{
+  "name": "template-admin",
+  "version": "0.0.1",
+  "description": "HomePrezzo admin controls",
+  "productName": "Homeprezzo",
+  "cordovaId": "org.cordova.quasar.app",
+  "author": "Nikko Mesina",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "build": "quasar build",
+    "start": "node server.js",
+    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "connect-history-api-fallback": "^1.6.0",
+    "express": "^4.16.4",
+    "serve-static": "^1.13.2",
+    "tweenjs": "^1.0.2"
+  },
+  "devDependencies": {
+    "quasar-cli": "^0.17.0",
+    "strip-ansi": "=3.0.1"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ],
+  "resolutions": {
+    "ajv": "6.8.1"
+  }
+}
