@@ -18,7 +18,7 @@
         <q-toolbar-title >
           
           <div style = "display:flex;align-items:center;justify-content:flex-end">
-            <img alt="Quasar logo" src="assets/homeprezzo.png" style= "height:18px;" >
+            <img alt="homeprezzo" src="~assets/homeprezzo.png" style= "height:18px;" >
             <q-btn
               size="sm"
               round
@@ -65,7 +65,7 @@
           </q-item>
         </div>
 
-        <q-item @click.native="openURL('https://discord.gg/5TDhbDg')" >
+        <q-item @click.native="" >
           <q-item-side style="color:white" icon="chat"  />
           <q-item-main label="Messages" />
         </q-item>
@@ -80,7 +80,7 @@
           <q-item-main label="Forum" />
         </q-item>
 
-        <q-item @click.native="openURL('https://twitter.com/quasarframework')">
+        <q-item @click.native="">
           <q-item-side style="color:white" icon="rss feed"  />
           <q-item-main label="Twitter" />
         </q-item>
@@ -99,7 +99,7 @@
           <q-item-side style="color:white" icon="fas fa-user-circle"  />
         </q-item>
 
-        <q-item @click.native="openURL('https://discord.gg/5TDhbDg')">
+        <q-item @click.native="">
           <q-item-side style="color:white" icon="chat"  />
         </q-item>
 
@@ -107,10 +107,10 @@
           <q-item-side style="color:white" icon="security"  />
         </q-item>
 
-        <q-item @click.native="openURL('http://forum.quasar-framework.org')">
+        <q-item @click.native="">
           <q-item-side style="color:white" icon="record_voice_over"  />
         </q-item>
-        <q-item @click.native="openURL('https://twitter.com/quasarframework')">
+        <q-item @click.native="">
           <q-item-side style="color:white" icon="rss feed"  />
         </q-item>
       </q-list>
