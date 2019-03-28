@@ -52,7 +52,7 @@ export default {
   },
   data () { 
     return {
-      baseUrl : 'assets/',
+      baseUrl : '~assets/',
       currBG : 'bg1.jpg',
       bgImageArray : ["bg1.jpg", "bg2.jpg", "bg3.jpg"],
       leftDrawerOpen: true,
