@@ -1,7 +1,7 @@
 import { route, axe } from 'assets/backend'
 import { _glob } from 'assets/global'
 import { Router } from 'src/router/index'
-export const ignoreRoutes = ['/forgotPassword', '/quote', '/portal/quote', '/portal/status','/set-password', '/login/baseauth', '/portal/login']
+export const ignoreRoutes = ['/forgotPassword', '/set-password', '/login',]
 
 export const _token = {
 
@@ -9,12 +9,11 @@ export const _token = {
    * @param [token, user] sets up the token;
    * @var x;
   */
-  integrate (token_, user_, account_ = []) {
+  integrate (token_, user_,) {
     var _t = this.hash(token_)
     this.store((window.atob(_t)))
     localStorage.setItem('_rt', token_)
     _user.storeUser(user_)
-    _accounts.storeAccounts(account_)
   },
 
   /**

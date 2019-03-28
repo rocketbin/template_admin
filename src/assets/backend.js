@@ -43,7 +43,7 @@ export const pub = _pub
 export const loginchecker = _loginchecker
 
 export const route = {
-  test: apiroute + 'test',
+  signin: apiroute + 'attempt',
   colours: apiroute + 'colors',
   uploads: {
     image: apiroute + 'uploads/image'

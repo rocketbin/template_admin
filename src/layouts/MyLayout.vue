@@ -61,7 +61,7 @@
         <div style = "height:150px;display:flex;align-items:flex-end;justify-content:center;" class=  "bg-light">
           <q-item @click.native="">
             <q-item-side style="color:white" icon="fas fa-user-circle"  />
-            <q-item-main label="Nikko Mesina" sublabel="nikko@homeprezzo.com.au" />
+            <q-item-main :label="user.name" :sublabel="user.email" />
           </q-item>
         </div>
 
@@ -75,14 +75,14 @@
           <q-item-main label="Admin" />
         </q-item>
 
-        <q-item exact to ="admin">
+        <q-item @click.native="">
           <q-item-side style="color:white" icon="record_voice_over"  />
           <q-item-main label="Forum" />
         </q-item>
 
-        <q-item @click.native="">
-          <q-item-side style="color:white" icon="rss feed"  />
-          <q-item-main label="Twitter" />
+        <q-item @click.native="destroy()">
+          <q-item-side style="color:white" icon="mdi-logout-variant"  />
+          <q-item-main label="Logout" />
         </q-item>
       </q-list>
 
@@ -110,8 +110,8 @@
         <q-item @click.native="">
           <q-item-side style="color:white" icon="record_voice_over"  />
         </q-item>
-        <q-item @click.native="">
-          <q-item-side style="color:white" icon="rss feed"  />
+        <q-item @click.native="destroy()">
+          <q-item-side style="color:white" icon="mdi-logout-variant"  />
         </q-item>
       </q-list>
     </q-layout-drawer>
@@ -124,6 +124,7 @@
 
 <script>
 import { openURL } from 'quasar'
+import {_user, _token} from 'src/assets/token'
 import {mapGetters, mapActions} from 'vuex'
 export default {
   computed: {
@@ -138,6 +139,10 @@ export default {
         'colorpicker': value
       }});
       }
+    },
+    user () {
+      let _u = _user.getUser();
+      return _u;
     }
   },
   data () { 
@@ -149,6 +154,10 @@ export default {
   methods: {
     ...mapActions(['_config']),
     openURL,
+    destroy() {
+     _token.release()
+      this.$router.push('login')
+    },
     pushRoute(route) {
       this.$router.push(route)
     },

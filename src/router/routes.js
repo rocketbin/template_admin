@@ -12,6 +12,13 @@ const routes = [
     beforeEnter: navAdmin
   },
   {
+    path: '/login',
+    component: () => import('layouts/login.vue'),
+    children: [
+      { path: '', component: () => import('pages/login.vue') }
+    ]
+  },
+  {
     path: '/admin',
     component: () => import('layouts/MyLayout.vue'),
     children: [
