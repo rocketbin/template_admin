@@ -107,11 +107,12 @@ export default {
       document.getElementById('scene1').appendChild(scr)
     },
     submitscript() {
-      let initialize = this.init + '\n init();';
-      if(this.image.length < 0) {
+      // _glob.map_props(this.script);
+
+      let initialize = this.init + '\n init(); ';
+      if(this.image !== '') {
         this.script = _glob.map_image(this.script, storage + this.image);
       }
-      // this.createScript(this.script);
       this._colors(_glob.map_colors(this.script));
       this._config({'admin': {
         'loadout': true

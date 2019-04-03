@@ -25,7 +25,7 @@ export const _purl = {
     if (!log) {
       _token.release()
       if (router.currentRoute.fullPath !== '/login') {
-        router.push('/login')
+        window.location.href = "login"
         return false
       }
     } else {
@@ -213,6 +213,7 @@ export const _purl = {
     if (this.logged()) {
       var _t = this.setToken()
       var _r = xuri + _t
+      console.log(_t)
       if (data === '' || data === null) {
         return axe.put(_r)
       } else {

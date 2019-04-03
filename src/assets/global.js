@@ -421,63 +421,29 @@ export const _glob = {
     switch (parseInt(status)) {
       case 1:
         return {
-          label: 'draft',
-          color: 'warning'
+          label: 'active',
+          color: 'primary',
+          icon:  'far fa-check-circle'
+
         }
       case 2:
         return {
-          label: 'sent',
-          color: 'secondary'
+          label: 'pending',
+          color: 'deep-purple',
+          icon:  'far fa-clock'
         }
       case 3:
         return {
           label: 'supplier returned',
-          color: 'tertiary'
-        }
-      case 4:
-        return {
-          label: 'approved',
-          color: 'info'
-        }
-      case 5:
-        return {
-          label: 'in progress',
-          color: 'positive'
-        }
-      case 6:
-        return {
-          label: 'completed',
-          color: 'positive'
-        }
-      case 7:
-        return {
-          label: 'closed',
-          color: 'indigo'
-        }
-      case 8:
-        return {
-          label: 'declined',
-          color: 'red'
-        }
-      case 9:
-        return {
-          label: 'expired',
-          color: 'negative'
-        }
-      case 10:
-        return {
-          label: 'invisible',
-          color: 'cyan'
-        }
-      case 11:
-        return {
-          label: 'rejected',
-          color: 'cyan'
+          color: 'red',
+          icon:  'fas fa-minus-circle'
+
         }
       default:
         return {
-          label: 'undefined',
-          color: 'negative'
+          label: 'pending',
+          color: 'deep-purple',
+          icon:  'far fa-clock'
         }
     }
   },
@@ -575,10 +541,56 @@ export const _glob = {
   },
 
   /*
+   * map regx props
+  */
+  map_props (str, width, height) {
+    let matches = str.match(/{([^}]+)}/g);
+    matches.map(match => {
+      if(match.includes('width')) {
+        let m = match.match(/width: 1280,/);
+        let mm = m.map(r => {
+          // r.replace(r, 'width: 480,')
+          return `width: ${width},`
+        })
+        str = str.replace('width: 1280,', mm)
+      }
+      if(match.includes('height')) {
+        str = str.replace('height: 720,', `height: ${height},`)
+      }
+    })
+    // console.log(matches)
+    return str;
+  },
+
+
+
+  /*
+   * map regx props
+  */
+  map_init_props (str, width, height) {
+      str = str.replace('window.innerWidth', width)
+      str = str.replace('window.innerHeight', height)
+      return str
+  },
+
+  /*
    * Re render script
   */
   rerenderScript(str) {
     let el = document.getElementById('scripter');
     el.text = str;
+  },
+
+  /*
+  * find reponsive function (init)
+  */
+  map_responsive (str) {
+    return str.replace('makeResponsive(false,','makeResponsive(true,')
+  },
+
+  getByt(str) {
+    // Matches only the 10.. bytes that are non-initial characters in a multi-byte sequence.
+    var m = encodeURIComponent(str).match(/%[89ABab]/g);
+    return str.length + (m ? m.length : 0);
   }
 }

@@ -3,6 +3,12 @@ export default {
       editor:{ 
         colors: [],
         origin: []
+    },
+    scene: {
+      loader: {
+        id: 0,
+        callback: () => {},
+      }
     }
   }
 

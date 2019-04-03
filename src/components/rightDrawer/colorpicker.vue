@@ -9,7 +9,7 @@
       >
         <q-btn-dropdown :label="activeColorName" size = "sm" outline  >
           <!-- dropdown content -->
-          <q-list v-for="color in colours" style = "display:flex;justify-content:center;width:inherit" @click.native="colorseparator(color)" v-close-overlay>
+          <q-list v-for="(color, index) in colours" style = "display:flex;justify-content:center;width:inherit" @click.native="colorseparator(color)" v-close-overlay :key="index">
             <div  v-for="paint in color._colors" >
               <div :style= "setBg(paint)" style= "width:40px;height:30px"></div>
             </div>

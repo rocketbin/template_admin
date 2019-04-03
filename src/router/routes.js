@@ -1,5 +1,5 @@
 const navAdmin = (to, from, next) => {
-  next('/admin')
+  next()
 }
 
 const routes = [
@@ -7,7 +7,7 @@ const routes = [
     path: '/',
     component: () => import('layouts/MyLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: 'dashboard', component: () => import('pages/dashboard/dashboard.vue') },
     ],
     beforeEnter: navAdmin
   },

@@ -42,6 +42,8 @@
       dark
     >
     <colorpicker v-if="config.rightDrawer.colorpicker"/>
+    <canvasSize/>
+    <templateSave />
   </q-layout-drawer>
     <q-layout-drawer
       v-model="leftDrawerOpen"
@@ -65,9 +67,9 @@
           </q-item>
         </div>
 
-        <q-item @click.native="" >
-          <q-item-side style="color:white" icon="chat"  />
-          <q-item-main label="Messages" />
+        <q-item @click.native="pushRoute('dashboard')" >
+          <q-item-side style="color:white" icon="dashboard"  />
+          <q-item-main label="Dashboard" />
         </q-item>
 
         <q-item @click.native="pushRoute('admin')" active>
@@ -95,12 +97,12 @@
         style="padding-top:110px;color:white"
       >
 
-        <q-item @click.native="" >
+        <q-item @click.native="pushRoute('dashboard')" >
           <q-item-side style="color:white" icon="fas fa-user-circle"  />
         </q-item>
 
         <q-item @click.native="">
-          <q-item-side style="color:white" icon="chat"  />
+          <q-item-side style="color:white" icon="dashboard"  />
         </q-item>
 
         <q-item @click.native="pushRoute('admin')" active>

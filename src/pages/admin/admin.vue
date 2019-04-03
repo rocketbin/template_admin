@@ -59,7 +59,5 @@ export default {
 }   
 </script>
 <style>
-.actionButton .q-icon {
-  font-size: 250% !important;
-}
+
 </style>

@@ -2,6 +2,7 @@
   <div id="q-app">
     <addTemplateModal/>
     <selectColorModal/>
+    <confirm/>
     <router-view />
   </div>
 </template>

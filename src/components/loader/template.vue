@@ -1,10 +1,10 @@
 
 <template>
   <div id = "scene">
-  	<div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); width:1280px; height:720px;max-width:100%">
-    		<canvas id="canvas" width="800" height="600" style="position: absolute; display: block; background-color:rgba(255, 255, 255, 1.00);max-width:100%" ></canvas>
-    		<div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:1280px; height:720px; position: absolute; left: 0px; top: 0px; display: block;">
-  		</div>
+  	<div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); width:480px; height:320px;max-width:100%">
+    		<canvas id="canvas" width="480" height="320" style="position: absolute; display: block; background-color:rgba(255, 255, 255, 1.00);max-width:100%" ></canvas>
+    		<div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:480px; height:320px; position: absolute; left: 0px; top: 0px; display: block;">
+  		  </div>
     </div>
   	</div>
 </template>
