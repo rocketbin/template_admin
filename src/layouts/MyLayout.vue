@@ -60,10 +60,10 @@
         inverted
         style="color:white"
       >
-        <div style = "height:150px;display:flex;align-items:flex-end;justify-content:center;" class=  "bg-light">
-          <q-item @click.native="">
+        <div :style = "style('statics/geo.jpg')" >
+          <q-item class="sublabel-item" style ="background:rgba(0,0,0,0.3);width:100%">
             <q-item-side style="color:white" icon="fas fa-user-circle"  />
-            <q-item-main :label="user.name" :sublabel="user.email" />
+            <q-item-main style="color:white" :label="user.name" :sublabel="user.email" />
           </q-item>
         </div>
 
@@ -72,7 +72,7 @@
           <q-item-main label="Dashboard" />
         </q-item>
 
-        <q-item @click.native="pushRoute('admin')" active>
+        <q-item @click.native="pushRoute('admin')" >
           <q-item-side style="color:white" icon="security"  />
           <q-item-main label="Admin" />
         </q-item>
@@ -96,7 +96,6 @@
         inverted
         style="padding-top:110px;color:white"
       >
-
         <q-item @click.native="pushRoute('dashboard')" >
           <q-item-side style="color:white" icon="fas fa-user-circle"  />
         </q-item>
@@ -156,6 +155,9 @@ export default {
   methods: {
     ...mapActions(['_config']),
     openURL,
+    style (bg) {
+      return 'margin-top:-10px;height:180px;width:auto;display:flex;align-items:flex-end;justify-content:center;background:white url("'+ bg +'");background-size:cover';
+    },
     destroy() {
      _token.release()
       this.$router.push('login')
@@ -177,4 +179,7 @@ export default {
 </script>
 
 <style>
+.sublabel-item .q-item-sublabel {
+  color:whitesmoke;
+}
 </style>

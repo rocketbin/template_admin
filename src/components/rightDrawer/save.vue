@@ -24,6 +24,7 @@ export default {
       console.log()
       this.buttonLoader = true
       _purl.put(route.scenes.save, {
+        name: this.scripts.name,
         init: this.scripts.initial,
         data: this.scripts.script,
         path: this.scripts.strimage,

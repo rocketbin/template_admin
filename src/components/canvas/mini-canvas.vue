@@ -1,5 +1,5 @@
 <template>
-    <div :id="divId" class = "col-sm-1 col-md-3" style = "display:flex;justify-content:center;align-items:center;background-color:rgba(255, 255, 255, .1);cursor: pointer">
+    <div :id="divId" class = "col-sm-1 col-md-4" style = "display:flex;justify-content:center;align-items:center;background-color:rgba(255, 255, 255, .1);cursor: pointer">
       <div id="animation_container" class= "animat-frame-sm zoom-on-hover" style = "position:relative">
           <div class= "zoom-icon-container" style = "position:absolute;display:flex;width:100%; height:100%;align-contents:center;justify-content:center">
             <q-btn round flat style = "align-self:center" color="grey-3" size = "xl" @click = "sceneLoader(data.id)" icon = "play_circle_outline" class="actionButton"/>

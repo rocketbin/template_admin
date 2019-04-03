@@ -30,7 +30,6 @@ if (prod === 'live') {
   _pub            = 'http://localhost:8080/'
   _loginchecker   =  'http://localhost:8000/api/'
   _storage        = 'http://localhost:8000/storage/'
-
 }
 
 // assign api compiler values

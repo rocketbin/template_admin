@@ -23,6 +23,13 @@
     <div class="layout-padding">
       <span class = "text-grey" style = "font-size:120%">scene template editor</span>
         <q-input
+          v-model="name"
+          type="text"
+          float-label="name"
+          :max-height="100"
+          rows="4"
+        />
+        <q-input
           v-model="init"
           type="textarea"
           float-label="initialize function"
@@ -78,6 +85,7 @@ export default {
     return {
       multi: false,
       image: '',
+      name: '',
       scriptname: '',
       script: '',
       search: '',
@@ -122,7 +130,7 @@ export default {
       }});
       
       this.addTemplateModal = false;
-      this._scripts({'name': this.scriptname, 'script': this.script, 'initial': initialize , 'strimage': this.image})
+      this._scripts({'name':this.name, 'scriptname': this.scriptname, 'script': this.script, 'initial': initialize , 'strimage': this.image})
     }
   },
   mounted () {

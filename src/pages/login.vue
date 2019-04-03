@@ -53,7 +53,7 @@ export default {
       this.loading = false
       console.log(r.data.token)
       _token.integrate(r.data.token, r.data.user)
-      window.location.href = '/admin'
+      window.location.href = '/dashboard'
       _glob.notify('logged in!', 'positive')
     }).catch(e => {
       this.loading = false
