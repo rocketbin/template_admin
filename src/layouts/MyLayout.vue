@@ -46,6 +46,7 @@
     <templateSave />
   </q-layout-drawer>
     <q-layout-drawer
+
       v-model="leftDrawerOpen"
       @mouseover="minified = false"
       @mouseout="minified = true"
@@ -67,9 +68,9 @@
           </q-item>
         </div>
 
-        <q-item @click.native="pushRoute('dashboard')" >
+        <q-item @click.native="pushRoute('templates')" >
           <q-item-side style="color:white" icon="dashboard"  />
-          <q-item-main label="Dashboard" />
+          <q-item-main label="Templates"/>
         </q-item>
 
         <q-item @click.native="pushRoute('admin')" >

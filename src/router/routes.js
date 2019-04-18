@@ -8,6 +8,7 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       { path: 'dashboard', component: () => import('pages/dashboard/dashboard.vue') },
+      { path: 'templates', component: () => import('pages/templates/templates.vue') },
     ],
     beforeEnter: navAdmin
   },

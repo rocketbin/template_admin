@@ -1,5 +1,5 @@
 <template>
-<q-modal v-model="addTemplateModal.open" :content-css="{minWidth: '40vw', minHeight: '50vh'}">
+<q-modal v-model="addTemplateModal.open" :content-css="{minWidth: '65vw', minHeight: '65vh'}">
   <q-modal-layout>
     <q-toolbar slot="header">
       <q-btn
@@ -16,7 +16,7 @@
 
     <q-toolbar  slot="footer" inverted class = "no-shadow" style = "display:flex;justify-content:flex-end">
       <q-btn color="primary" flat icon="check" @click="submitscript">
-        submit
+        View
       </q-btn>
     </q-toolbar>
 

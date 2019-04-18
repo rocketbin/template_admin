@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from 'src/store/index'
 
 export const axe = axios
-let prod = 'dev' // 'local' | 'dev' | 'live'
+let prod = 'local' // 'local' | 'dev' | 'live'
 var _apiroute, _signed, _pub, _localapiroute, _loginchecker, _storage // eslint-disable-line no-unused-vars
 
 if (prod === 'local') {
@@ -45,7 +45,15 @@ export const route = {
   signin: apiroute + 'attempt',
   colours: apiroute + 'colors',
   uploads: {
-    image: apiroute + 'uploads/image'
+    image: apiroute + 'uploads/image',
+    raw: apiroute + 'uploads/raw/read'
+  },
+  config: {
+    types: apiroute + 'config/types'
+  },
+  jsscenes: {
+    store: apiroute + 'js/store',
+    update: js => apiroute + 'js/' + js + '/update'
   },
   scenes: {
     get: apiroute + 'scenes',

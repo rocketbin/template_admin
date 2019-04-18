@@ -1,7 +1,8 @@
 <template>
   <div id="q-app">
-    <addTemplateModal/>
+    <!-- <addTemplateModal/> -->
     <selectColorModal/>
+    <newTemplateModal/>
     <confirm/>
     <router-view />
   </div>

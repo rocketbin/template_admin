@@ -280,7 +280,21 @@ export const _glob = {
 
     return filterItem(q)
   },
-
+  /**
+   * limits the string char to no more than 15
+   * @var arr;
+  */
+  setTextLimiter (val, lng = 15) {
+    if(val !== null) {
+      if(val.length > lng) {
+        return val.substring(0,lng) + '....';
+      } else {
+        return val
+      }
+    } else {
+      return ' '
+    }
+  },
   /**
    * filters the array with compare
    * @var arr;

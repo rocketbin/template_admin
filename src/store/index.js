@@ -7,6 +7,7 @@ import modals from './modals/index'
 import scripts from './scripts/index'
 import colours from './colours/index'
 import active from './active/index'
+import tables from './tables/index'
 
 Vue.use(Vuex)
 
@@ -23,6 +24,7 @@ export default function (/* { ssrContext } */) {
       scripts,
       modals,
       active,
+      tables,
       colours
     }
   })

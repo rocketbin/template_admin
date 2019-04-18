@@ -5,9 +5,12 @@ export default {
       label: '',
       callback: () => {},
     },
-  	addTemplate: {
-  		open: false
-  	},
+    addTemplate: {
+      open: false
+    },
+    newTemplate: {
+      open: false
+    },
     selectColor: {
       open: false,
       index: 0,

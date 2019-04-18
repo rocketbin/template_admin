@@ -4,12 +4,16 @@ import { Loading } from 'quasar'
 import { logginRoute } from 'src/assets/backend'
 // import something here
 import addTemplate from 'src/components/modals/addTemplate'
+import templateEditorForm from 'src/components/loader/template-editor-form'
+import newTemplate from 'src/components/modals/newTemplate'
 import selectColor from 'src/components/modals/selectColor'
 import sceneViewer from 'src/components/modals/sceneViewer'
 import confirm from 'src/components/modals/confirm'
 import scriptLoader from 'src/components/loader/template'
 import colorpicker from 'src/components/rightDrawer/colorpicker'
 import canvas from 'src/components/rightDrawer/canvas'
+import textpicker from 'src/components/rightDrawer/textpicker'
+import fileTextLoader from 'src/components/rightDrawer/fileTextLoader'
 import save from 'src/components/rightDrawer/save'
 import miniCanvas from 'src/components/canvas/mini-canvas'
 import midcanvas from 'src/components/canvas/md-canvas'
@@ -18,7 +22,7 @@ import infobox from 'src/pages/dashboard/info-box'
 // leave the export, even if you don't use it
 export default ({ app, router, Vue }) => {
   // something to do
-  Vue.component('addTemplateModal', addTemplate);
+  Vue.component('newTemplateModal', newTemplate);
   Vue.component('selectColorModal', selectColor);
   Vue.component('scriptLoader', scriptLoader);
   Vue.component('colorpicker', colorpicker);
@@ -30,12 +34,16 @@ export default ({ app, router, Vue }) => {
   Vue.component('midcanvas', midcanvas);
   Vue.component('infobox', infobox);
   Vue.component('confirm', confirm);
+  Vue.component('textpicker', textpicker);
+  Vue.component('templateEditorForm', templateEditorForm);
+  Vue.component('fileTextLoader', fileTextLoader);
+  
 
   app.watch = {
     '$route': function (from, to) {
       // if (_prod !== 'local' ) {
       //   if (window.location.protocol !== 'https:') {
-      //     window.location.href = 'https://fm-dev.cirrus8.com.au/login'
+      //     window.location.href = 'https://'
       //   }
       // }
       let auth = _token.checkToken()

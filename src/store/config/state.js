@@ -6,6 +6,9 @@ export default {
   	},
   	admin: {
   		loadout: false
-  	}
+  	},
+    templates: {
+      types :[]
+    }
   }
 }
