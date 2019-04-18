@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from 'src/store/index'
 
 export const axe = axios
-let prod = 'local' // 'local' | 'dev' | 'live'
+let prod = 'dev' // 'local' | 'dev' | 'live'
 var _apiroute, _signed, _pub, _localapiroute, _loginchecker, _storage // eslint-disable-line no-unused-vars
 
 if (prod === 'local') {
