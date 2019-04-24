@@ -22,9 +22,9 @@
         download
       </q-tooltip>
     </q-btn>
-    <q-btn flat round icon="fas fa-pen" size="sm" color ="orange"  >
+    <q-btn flat round icon="fas fa-pen" size="sm" color ="orange"  @click="newTemp(props.row)">
       <q-tooltip> 
-        update
+        update 
       </q-tooltip>
     </q-btn>
   </q-td>
@@ -41,7 +41,7 @@
           style = "font-size:80%;margin:5px"
         />
           
-        <q-btn round icon="add_circle"  color ="primary" style = "margin:5px"  @click="_modals({'newTemplate':{'open': true}})">
+        <q-btn round icon="add_circle"  color ="primary" style = "margin:5px"  @click="_modals({'newTemplate':{'open': true, 'data': '', id: 0}})">
           <q-tooltip> 
             New
           </q-tooltip>
@@ -68,7 +68,7 @@
             download
           </q-tooltip>
         </q-btn>
-        <q-btn flat round icon="fas fa-pen" size="sm" color ="orange"  >
+        <q-btn flat round icon="fas fa-pen" size="sm" color ="orange" >
           <q-tooltip> 
             update
           </q-tooltip>
@@ -120,6 +120,9 @@ export default {
   },
   methods: {
     ...mapActions(['_modals', '_config']),
+    newTemp (row) {
+      this._modals({'newTemplate':{'open': true, 'data': row.data, 'id': row.js_id}})
+    },
     nextPage() {
       this.paginationControl.page = this.paginationControl.page + 1;
       this.loadTableData({
@@ -136,6 +139,9 @@ export default {
         this.paginationControl.page = r.data.current_page
         this.data = r.data.data
       })
+    },
+    test () {
+      alert()
     },
     getTypes() {
       Loading.show({

@@ -64,7 +64,10 @@ export default {
    * remove double quotes from a string 
   */
   removeDoubleQuotes (str) {
-    return str.replace(/^"(.+)"$/, '$1');
+    if(str)
+      return str.replace(/^"(.+)"$/, '$1');
+    else
+      return str
   },
 
   conv_strs (matches) {

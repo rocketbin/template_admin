@@ -59,7 +59,6 @@
         v-else
       >
         <div style = "padding:12px">
-
           <q-uploader
             ref="uploader"
             extensions = ".js"
@@ -97,6 +96,11 @@ import {_purl} from 'src/assets/purl'
 import regxStr from 'src/assets/regx'
 export default {
   watch: {
+    'modalStatus':function (val) {
+      if(val && this.newTemplateModal.id > 0) {
+        this.loadUpdateTemplate()
+      }
+    },
     script (str) {
       if(str.length > 40) {
         let loadDefault = this.validateScript()
@@ -124,6 +128,9 @@ export default {
       } else {
         return 'raw'
       }
+    },
+    modalStatus () {
+      return this.modals.newTemplate.open
     },
     newTemplateModal: {
       get () {
@@ -159,7 +166,6 @@ export default {
       '_colors',
     ]),
     saveScript() {
-      console.log(this.scriptid);
       if( this.scriptid === undefined || Number(this.scriptid) <= 0) {
         _purl.post(route.jsscenes.store, {
           filename: this.scriptname,
@@ -176,8 +182,7 @@ export default {
           data: this.script,
           config: JSON.stringify(this.animatProps)
         }).then(r => {
-          _glob.notify('data has been updated', 'positive')
-
+          // _glob.notify('data has been updated', 'positive')
         })
       }
     },
@@ -219,8 +224,12 @@ export default {
       this.scriptid = 0
       this.submitscript()
     },
+    loadUpdateTemplate () {
+      this.scriptid = this.newTemplateModal.id
+      this.script = this.newTemplateModal.data
+      this.checked = false
+    },
     processScript () {
-      console.log(this.animatProps)
     },
     filePut (files) {
       setTimeout(() => {
@@ -242,6 +251,7 @@ export default {
     }
   },
   mounted () {
+
     // console.log(regxStr.regxStr('sdfds'))
   }
 

@@ -9,7 +9,9 @@ export default {
       open: false
     },
     newTemplate: {
-      open: false
+      open: false,
+      data: '',
+      id: 0
     },
     selectColor: {
       open: false,
