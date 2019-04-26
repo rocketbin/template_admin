@@ -5,10 +5,11 @@
         <div class = "full-width" style = "display:flex;margin:20px">
           <div class="full-width" style = "display:flex;justify-content:flex-start;align-items:center; border: 2px solid grey; border-radius: 5px;padding-left:13px" v-if="readonly">
             <small>
-              {{text.text}}
+              <!-- <q-input v-model = "text.model" /> -->
+              {{text.model}}
             </small>
           </div>
-          <q-input v-model="text.text" v-else />
+          <q-input v-model="text.model" v-else />
           <div style = "margin:10px">
             <q-btn class = "shadow-3" round size="xs" color = "green-13" />
           </div>
@@ -36,7 +37,7 @@ export default {
   },
   data () {
     return {
-      readonly: true,
+      readonly: false,
       activeColor: ''
     }
   },

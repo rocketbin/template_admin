@@ -101,11 +101,18 @@ export default {
         this.loadUpdateTemplate()
       }
     },
+    'animatProps': {
+      handler (value) {
+          // console.log(value)
+          // this.script = regxStr.reconstructText(this.script, value)
+      },
+      deep: true
+    },
     script (str) {
       if(str.length > 40) {
         let loadDefault = this.validateScript()
         if(Number(loadDefault) > 0)
-          this.confirmNewScript()
+          this.submitscript()
         else
           this.submitscript()
       }
@@ -230,6 +237,8 @@ export default {
       this.checked = false
     },
     processScript () {
+      this.script = regxStr.reconstructText(this.oldScript, this.animatProps)
+      this.oldScript = this.script
     },
     filePut (files) {
       setTimeout(() => {
@@ -252,7 +261,7 @@ export default {
   },
   mounted () {
 
-    // console.log(regxStr.regxStr('sdfds'))
+    // console.log(json)
   }
 
 }

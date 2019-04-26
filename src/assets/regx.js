@@ -1,8 +1,11 @@
-const hexa = /#[0-9A-F]{6}/gi
+const hexa = /#[0-9A-F]{6}/mi
 const rgb = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/
-const texts = /^.*cjs.Text.+/gmi
-const quoted = /(["'])(?:(?=(\\?))\2.)*?\1/gmi
-const images = /(.*src.*)/gm
+const texts = /^.*cjs.Text.+/mi
+const quoted = /(["'])(?:(?=(\\?))\2.)*?\1/mi
+const images = /(.*src.*)/m
+const parentPar = /[^\(]*(\(.*\))[^\)]*/mi
+const parenthesis = /\(([^)]+)\)/mi
+const camma = /([^,]+)/
 export default {
 
   getProperties (str) {
@@ -64,7 +67,9 @@ export default {
    * remove double quotes from a string 
   */
   removeDoubleQuotes (str) {
-    if(str)
+    let dq = str.includes(`"`)
+    console.log(str)
+    if(dq > 0)
       return str.replace(/^"(.+)"$/, '$1');
     else
       return str
@@ -75,13 +80,38 @@ export default {
       return this.objectizeStr(match)
     })
   },
+  objectizeStr_getInsideStrings (str) {
+    let pair = str.match(parentPar)
+    return pair[1]
+  },
+  objectizeStr_separateCamma(str) {
+    let pair = str.match(parenthesis)
+    // if(pair[1] !== undefined || pair[1] !== null){
+      return pair[1]
+    // }
+  },
   objectizeStr (str) {
-    let objc = str.match(quoted)
+    let _is = this.objectizeStr_getInsideStrings(str);
+    let pairs = this.objectizeStr_separateCamma(_is)
+    let objc = pairs.match(quoted)
     return {
-      text: this.removeDoubleQuotes(objc[0]),
-      style: objc[1],
-      color: this.removeDoubleQuotes(objc[2]),
+      origin: str,
+      new: str,
+      text: objc === null ? '': this.removeDoubleQuotes(objc[0]),
+      model: objc === null ? '': this.removeDoubleQuotes(objc[0])
     }
+
+  },
+  reconstructText (str, obj) {
+    var newStr;
+    obj.texts.map(text => {
+        let nt = text.new.replace(text.text, text.model)
+        newStr = str.replace(text.origin, nt)
+        text.origin = text.new
+        text.text = text.model
+        // console.log(newText)
+    });
+    return newStr;
   },
 
   /*
