@@ -1,16 +1,25 @@
-const hexa = /#[0-9A-F]{6}/mi
+const hexa = /#[0-9A-F]{6}/gmi
 const rgb = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/
-const texts = /^.*cjs.Text.+/mi
+const texts = /^.*cjs.Text.+/gmi
 const quoted = /(["'])(?:(?=(\\?))\2.)*?\1/mi
 const images = /(.*src.*)/m
 const parentPar = /[^\(]*(\(.*\))[^\)]*/mi
 const parenthesis = /\(([^)]+)\)/mi
 const camma = /([^,]+)/
 export default {
+  /*
+   * return as error
+  */
+  returnFalseState() {
+    return {
+      success: false,
+      data: []
+    }
+  },
 
   getProperties (str) {
     let colors = this.map_hex_colors(str);
-    let texts = this.conv_strs(this.map_str(str));
+    let texts = this.conv_strs(this.map_str(str)['data']);
     let images = this.map_images(str);
     return {
       colors,
@@ -22,13 +31,19 @@ export default {
    * color search
   */
   map_hex_colors (str) {
-    let matches = str.match(hexa);
-    if(matches) {
-      let _m = matches.filter((v,i) => matches.indexOf(v) === i)
-      return _m.map(m => this.hexToRgbA(m))
+    if(hexa.test(str)) {
+      let matches = str.match(hexa);
+      if(matches) {
+        let _m = matches.filter((v,i) => matches.indexOf(v) === i)
+        return {
+          success: true,
+          data: _m.map(m => this.hexToRgbA(m))
+        }
+      }
     } else {
-      return []
+      return this.returnFalseState()
     }
+
   },
 
   /*
@@ -55,11 +70,16 @@ export default {
    * text str search
   */
   map_str (str) {
-    let matches = str.match(texts);
-    if(matches) {
-      return matches.filter((v,i) => matches.indexOf(v) === i)
+    if(texts.test(str)) {
+      let matches = str.match(texts);
+      if(matches) {
+        return {
+          success: true,
+          data: matches.filter((v,i) => matches.indexOf(v) === i)
+        }
+      }
     } else {
-      return []
+      return this.returnFalseState()
     }
   },
 
@@ -68,7 +88,6 @@ export default {
   */
   removeDoubleQuotes (str) {
     let dq = str.includes(`"`)
-    console.log(str)
     if(dq > 0)
       return str.replace(/^"(.+)"$/, '$1');
     else
@@ -81,26 +100,40 @@ export default {
     })
   },
   objectizeStr_getInsideStrings (str) {
-    let pair = str.match(parentPar)
-    return pair[1]
+    if(parentPar.test(str)) {
+      let pair = str.match(parentPar)
+      return {
+        success: true,
+        data: pair[1]
+      }
+    } else {
+      return this.returnFalseState()
+    }
   },
   objectizeStr_separateCamma(str) {
-    let pair = str.match(parenthesis)
-    // if(pair[1] !== undefined || pair[1] !== null){
-      return pair[1]
-    // }
+    if(parenthesis.test(str)) {
+      let pair = str.match(parenthesis)
+      return {
+        success: true,
+        data: pair[1]
+      }
+    } else {
+      return this.returnFalseState()
+    }
+
   },
   objectizeStr (str) {
-    let _is = this.objectizeStr_getInsideStrings(str);
-    let pairs = this.objectizeStr_separateCamma(_is)
-    let objc = pairs.match(quoted)
+    let _is   = this.objectizeStr_getInsideStrings(str);
+    let pairs = this.objectizeStr_separateCamma(_is.data)
+    let objc  = pairs.data.match(quoted)
+    let comSprtr = pairs.data.split(',');
     return {
       origin: str,
       new: str,
       text: objc === null ? '': this.removeDoubleQuotes(objc[0]),
-      model: objc === null ? '': this.removeDoubleQuotes(objc[0])
+      model: objc === null ? '': this.removeDoubleQuotes(objc[0]),
+      color: objc === null ? '': this.removeDoubleQuotes(comSprtr[2]),
     }
-
   },
   reconstructText (str, obj) {
     var newStr;
@@ -109,7 +142,6 @@ export default {
         newStr = str.replace(text.origin, nt)
         text.origin = text.new
         text.text = text.model
-        // console.log(newText)
     });
     return newStr;
   },
