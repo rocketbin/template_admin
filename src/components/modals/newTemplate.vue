@@ -177,7 +177,7 @@ export default {
         _purl.post(route.jsscenes.store, {
           filename: this.scriptname,
           reftype: 'raw',
-          data: this.script,
+          data: regxStr.RippedText(this.script, this.animatProps),
           raw: this.script,
           config: JSON.stringify(this.animatProps)
         }).then(r => {
@@ -258,7 +258,6 @@ export default {
       this.textdata    = this.animatProps.texts
       this.imagedata   = this.animatProps.images
       this._colors(_cs.data);
-      console.log(this.animatProps)
       if(!_cs.success)
         _glob.notify('no colors are detected', 'negative');
 

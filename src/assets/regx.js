@@ -89,7 +89,8 @@ export default {
   removeDoubleQuotes (str) {
     let dq = str.includes(`"`)
     if(dq > 0)
-      return str.replace(/^"(.+)"$/, '$1');
+      return str.replace(/"/g, '');
+      // return str.replace(/^"(.+)"$/, '$1');
     else
       return str
   },
@@ -128,11 +129,11 @@ export default {
     let objc  = pairs.data.match(quoted)
     let comSprtr = pairs.data.split(',');
     return {
-      origin: str,
-      new: str,
+      origin: str.trim().slice(),
+      new: str.trim(),
       text: objc === null ? '': this.removeDoubleQuotes(objc[0]),
       model: objc === null ? '': this.removeDoubleQuotes(objc[0]),
-      color: objc === null ? '': this.removeDoubleQuotes(comSprtr[2]),
+      color: objc === null ? '': this.removeDoubleQuotes(comSprtr[comSprtr.length-1]),
     }
   },
   reconstructText (str, obj) {
@@ -170,7 +171,29 @@ export default {
       id: this.removeDoubleQuotes(objc[1])
     }
   },
-
-
-
+  /*
+   * 
+  */
+  RippedText (str, obj) {
+    var newStr;
+    obj.texts.map(text => {
+        // text.color = this.removeDoubleQuotes(text.color)
+        newStr = this.replaceAll(str, {[text.text]: text.model, ['"' + text.color.replace(" ","") + '"']: 'lib.properties.color(json[lib.group_uuid].colorpalette[0], 4))'})
+        // let origin = new RegExp(text.origin.replace(';', ''),"ymi")
+        // console.log(origin)
+        // console.log(text.origin)
+        // console.log(str.match(`cjs.Text("Rentals", `))
+        // newStr = str.replace(text.origin, enscript)
+        // text.origin = enscript.slice
+        // text.text = text.model
+    });
+    console.log(newStr)
+    return newStr;
+  },
+   replaceAll(str,mapObj) {
+    var re = new RegExp(Object.keys(mapObj).join("|"),"gmi");
+    return str.replace(re, function(matched){
+        return mapObj[matched];
+    });
+  }
 }
