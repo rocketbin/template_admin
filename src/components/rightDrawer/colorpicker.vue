@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="padding: 10px;min-height:100px; display: flex;    justify-content: center;">
+    <div style="padding: 10px;min-height:100px; display: flex; justify-content: center;">
       <!-- Notice "dark" property -->
 <!--       <q-field
         inverted
@@ -25,20 +25,20 @@
       <small>color:</small><br>
       <div>
         <div v-for= "(color, index) in colors_" class = "full-width" style = "display:flex;margin:20px; " >
-          <q-btn :style= "getStyle(color)" />
-          <q-btn-dropdown :label = "pickers[index]" outline style = "min-width: 230px">
-            <q-list >
-              <q-item @click="pickers[index] = 'Text'">
+          <q-btn :style= "getStyle(color.color)" />
+          <q-btn-dropdown  :label = "pickers[color.type]" outline style= "min-width: 230px!important"  split>
+            <q-list  highlight>
+              <q-item @click.native="color.type = 2" v-close-overlay style="cursor:pointer">
                 <q-item-main>
                   <q-item-tile label>Text</q-item-tile>
                 </q-item-main>
               </q-item>
-              <q-item @click="pickers[index] = 'Icon'">
+              <q-item @click.native="color.type = 1" v-close-overlay style="cursor:pointer">
                 <q-item-main>
                   <q-item-tile label>Icon</q-item-tile>
                 </q-item-main>
               </q-item>
-              <q-item @click="pickers[index] = 'Background'">
+              <q-item @click.native="color.type = 0" v-close-overlay style="cursor:pointer">
                 <q-item-main>
                   <q-item-tile label>Background</q-item-tile>
                 </q-item-main>
@@ -66,9 +66,16 @@ import {mapGetters, mapActions} from 'vuex'
 import regxStr from 'src/assets/regx'
 
 export default{
+  props: ['colordata'],
   watch:{
     'hexa': function () {
       this.hex = this.modals.selectColor.hex
+    },
+    'colors_': {
+      handler (value) {
+        console.log(value)
+      },
+      deep:true
     }
   },
   computed: {
@@ -79,7 +86,10 @@ export default{
       'colours'
     ]),
     colors_() {
-        return this.colors;
+      if(this.colordata)
+        return this.colordata.data;
+      else
+        return []
     },
     hexa() {
       return this.modals.selectColor.hex
@@ -88,9 +98,9 @@ export default{
   data () {
     return {
       pickers: [
-        'Text',
         'Background',
-        'Icon'
+        'Icon',
+        'Text'
       ],
       activeColorName: 'pick a template',
       activeColors: [],
@@ -102,7 +112,7 @@ export default{
     openSelector(color, index) {
         this._modals({'selectColor': {
           'open': true,
-          'hex': color,
+          'hex': color.color,
           'index': index
         }})
     },
@@ -111,7 +121,6 @@ export default{
     },
     colorChange (color, index) {
       this.activeColor = regxStr.constructRgba(color)
-      console.log(this.activeColor)
       this.colors_[index] = this.activeColor
     },
     colorseparator (color) {
@@ -123,7 +132,6 @@ export default{
     },
   },
   mounted () {
-
     // console.log(this.colours)
   }
 }

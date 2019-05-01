@@ -37,7 +37,14 @@ export default {
         let _m = matches.filter((v,i) => matches.indexOf(v) === i)
         return {
           success: true,
-          data: _m.map(m => this.hexToRgbA(m))
+          data: _m.map(m => {
+            return {
+              original: m,
+              color: this.hexToRgbA(m),
+              type: 0,
+              shade: 0
+            }
+          })
         }
       }
     } else {
@@ -175,20 +182,14 @@ export default {
    * 
   */
   RippedText (str, obj) {
-    var newStr;
+    let textObjs = {};
     obj.texts.map(text => {
-        // text.color = this.removeDoubleQuotes(text.color)
-        newStr = this.replaceAll(str, {[text.text]: text.model, ['"' + text.color.replace(" ","") + '"']: 'lib.properties.color(json[lib.group_uuid].colorpalette[0], 4))'})
-        // let origin = new RegExp(text.origin.replace(';', ''),"ymi")
-        // console.log(origin)
-        // console.log(text.origin)
-        // console.log(str.match(`cjs.Text("Rentals", `))
-        // newStr = str.replace(text.origin, enscript)
-        // text.origin = enscript.slice
-        // text.text = text.model
-    });
-    console.log(newStr)
-    return newStr;
+      Object.assign(textObjs, {[text.text]: text.model})
+    })
+    obj.colors.data.map(color => {
+      Object.assign(textObjs, {[color.original]: `json[lib.group_uuid].colorpalette[${color.type}]`})
+    })
+    return this.replaceAll(str, textObjs);
   },
    replaceAll(str,mapObj) {
     var re = new RegExp(Object.keys(mapObj).join("|"),"gmi");

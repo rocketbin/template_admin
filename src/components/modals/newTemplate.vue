@@ -78,7 +78,7 @@
           <textpicker :textdata="textdata"/>
         </div>
         <div class="col-xs-4">
-          <templateEditorForm/>
+          <colorpicker :colordata="colordata" />
         </div>
         <div class="col-xs-4">
           <fileTextLoader :imagedata="imagedata"/>
@@ -103,7 +103,7 @@ export default {
     },
     'animatProps': {
       handler (value) {
-          // console.log(value)
+          console.log(value)
           // this.script = regxStr.reconstructText(this.script, value)
       },
       deep: true
@@ -162,7 +162,8 @@ export default {
       scriptname: '',
       animatProps: {},
       textdata: [],
-      imagedata: []
+      imagedata: [],
+      colordata: []
     }
   },
   methods: {
@@ -173,6 +174,8 @@ export default {
       '_colors',
     ]),
     saveScript() {
+      console.log(regxStr.RippedText(this.script, this.animatProps))
+      // console.log(regxStr.RippedText(this.script, this.animatProps))
       if( this.scriptid === undefined || Number(this.scriptid) <= 0) {
         _purl.post(route.jsscenes.store, {
           filename: this.scriptname,
@@ -186,7 +189,7 @@ export default {
         })
       } else {
         _purl.post(route.jsscenes.update(this.scriptid), {
-          data: this.script,
+          data: regxStr.RippedText(this.script, this.animatProps),
           config: JSON.stringify(this.animatProps)
         }).then(r => {
           // _glob.notify('data has been updated', 'positive')
@@ -253,12 +256,13 @@ export default {
       document.getElementById('scene1').appendChild(scr)
     },
     submitscript() {
-      let _cs          = regxStr.map_hex_colors(this.script)
+      // let _cs          = regxStr.map_hex_colors(this.script)
       this.animatProps = regxStr.getProperties(this.script)
       this.textdata    = this.animatProps.texts
       this.imagedata   = this.animatProps.images
-      this._colors(_cs.data);
-      if(!_cs.success)
+      this.colordata   = this.animatProps.colors
+      // this._colors(this.animatProps.colors.data);
+      if(!this.colordata.success)
         _glob.notify('no colors are detected', 'negative');
 
     }
