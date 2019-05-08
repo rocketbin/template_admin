@@ -47,21 +47,34 @@
           </q-btn-dropdown>
           <q-btn-dropdown :label = "color.shade" style = "margin-left:5px" >
             <q-list  highlight>
-              <q-item @click.native="color.type = 2" v-close-overlay style="cursor:pointer">
+              <q-item @click.native="color.shade = -20" v-close-overlay style="cursor:pointer">
                 <q-item-main>
-                  <q-item-tile label>Text</q-item-tile>
+                  <q-item-tile label>-20</q-item-tile>
                 </q-item-main>
               </q-item>
-              <q-item @click.native="color.type = 1" v-close-overlay style="cursor:pointer">
+              <q-item @click.native="color.shade = -10" v-close-overlay style="cursor:pointer">
                 <q-item-main>
-                  <q-item-tile label>Icon</q-item-tile>
+                  <q-item-tile label>-10</q-item-tile>
                 </q-item-main>
               </q-item>
-              <q-item @click.native="color.type = 0" v-close-overlay style="cursor:pointer">
+              <q-item @click.native="color.shade = 0" v-close-overlay style="cursor:pointer">
                 <q-item-main>
-                  <q-item-tile label>Background</q-item-tile>
+                  <q-item-tile label>0</q-item-tile>
                 </q-item-main>
               </q-item>
+
+              <q-item @click.native="color.shade = +10" v-close-overlay style="cursor:pointer">
+                <q-item-main>
+                  <q-item-tile label>+10</q-item-tile>
+                </q-item-main>
+              </q-item>
+
+              <q-item @click.native="color.shade = +20" v-close-overlay style="cursor:pointer">
+                <q-item-main>
+                  <q-item-tile label>+20</q-item-tile>
+                </q-item-main>
+              </q-item>
+
             </q-list>
           </q-btn-dropdown>
 
