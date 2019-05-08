@@ -27,14 +27,6 @@ export default {
           field: 'reftype'
         },
         {
-          name: 'data',
-          required: true,
-          label: 'Data',
-          align: 'left',
-          field: scene => _glob.setTextLimiter(scene.data, 25),
-          sortable: true
-        },
-        {
           name: 'timestamp',
           required: true,
           label: 'Timestamp',

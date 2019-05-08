@@ -26,7 +26,7 @@
       <div>
         <div v-for= "(color, index) in colors_" class = "full-width" style = "display:flex;margin:20px; " >
           <q-btn :style= "getStyle(color.color)" />
-          <q-btn-dropdown  :label = "pickers[color.type]" outline style= "min-width: 230px!important"  split>
+          <q-btn-dropdown  :label = "pickers[color.type]" outline  split>
             <q-list  highlight>
               <q-item @click.native="color.type = 2" v-close-overlay style="cursor:pointer">
                 <q-item-main>
@@ -45,7 +45,38 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown label = "+20" style = "margin-left:5px" >
+          <q-btn-dropdown :label = "color.shade" style = "margin-left:5px" >
+            <q-list  highlight>
+              <q-item @click.native="color.type = 2" v-close-overlay style="cursor:pointer">
+                <q-item-main>
+                  <q-item-tile label>Text</q-item-tile>
+                </q-item-main>
+              </q-item>
+              <q-item @click.native="color.type = 1" v-close-overlay style="cursor:pointer">
+                <q-item-main>
+                  <q-item-tile label>Icon</q-item-tile>
+                </q-item-main>
+              </q-item>
+              <q-item @click.native="color.type = 0" v-close-overlay style="cursor:pointer">
+                <q-item-main>
+                  <q-item-tile label>Background</q-item-tile>
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+
+          <q-btn-dropdown :label = "color.tint" style = "margin-left:5px" content-style="width:220px;padding: 20px 8px;">
+            <div style = "margin:10px">
+              <q-slider
+                v-model="color.tint"
+                :min="-50"
+                :max="50"
+                :step="5"
+                label
+                snap
+                markers
+              />
+            </div>
 
           </q-btn-dropdown>
       <!--     <q-btn-dropdown  outline :label="color" class ="full-width" style = "min-width:220px">

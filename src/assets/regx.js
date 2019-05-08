@@ -42,7 +42,8 @@ export default {
               original: m,
               color: this.hexToRgbA(m),
               type: 0,
-              shade: 0
+              shade: 20,
+              tint: 0,
             }
           })
         }
@@ -138,6 +139,7 @@ export default {
     return {
       origin: str.trim().slice(),
       new: str.trim(),
+      _raw: objc === null ? '': this.removeDoubleQuotes(objc[0]),
       text: objc === null ? '': this.removeDoubleQuotes(objc[0]),
       model: objc === null ? '': this.removeDoubleQuotes(objc[0]),
       color: objc === null ? '': this.removeDoubleQuotes(comSprtr[comSprtr.length-1]),

@@ -9,7 +9,7 @@
               {{text.model}}
             </small>
           </div>
-          <q-input v-model="text.model" v-else />
+          <q-input v-model="text.model" :stack-label = "text._raw" v-else />
           <div style = "margin:10px">
             <q-btn class = "shadow-3" round size="xs" color = "green-13" />
           </div>

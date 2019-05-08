@@ -1,6 +1,7 @@
 <template>
   <q-table
     class="shadow-0"
+    dense
     :grid="gridMode"
     :hide-header="gridMode"
     :loading="tableLoad"
@@ -132,7 +133,7 @@ export default {
     },
     loadTableData({ pagination, filter }) {
       this.tableLoad = true
-      _purl.get(route.scenes.get, {page: pagination.page}).then (r => {
+      _purl.get(route.scenes.get, {page: pagination.page, search: filter}).then (r => {
         this.tableLoad = false
         this.paginationControl.rowsNumber = r.data.total
         this.paginationControl.rowsPerPage = r.data.per_page
