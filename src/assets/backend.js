@@ -15,12 +15,12 @@ if (prod === 'local') {
 }
 
 if (prod === 'dev') {
-  _apiroute       = 'https://salty-waters-22931.herokuapp.com/api/'
+  _apiroute       = 'https://quiet-falls-24566.herokuapp.com/api/'
   _signed         = 'http://localhost:8000/api/signed/'
   _localapiroute  = 'http://localhost:8000/api/'
   _pub            = 'http://localhost:8080/'
   _loginchecker   =  'http://localhost:8000/api/'
-  _storage        = 'https://salty-waters-22931.herokuapp.com/storage/'
+  _storage        = 'https://quiet-falls-24566.herokuapp.com/storage/'
 }
 
 if (prod === 'live') {
