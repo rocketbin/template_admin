@@ -175,7 +175,7 @@ export default {
     ]),
     saveScript() {
       // console.log(regxStr.RippedText(this.script, this.animatProps))
-      // console.log(regxStr.RippedText(this.script, this.animatProps))
+      console.log(regxStr.RippedText(this.script, this.animatProps))
       if( this.scriptid === undefined || Number(this.scriptid) <= 0) {
         _purl.post(route.jsscenes.store, {
           filename: this.scriptname,
