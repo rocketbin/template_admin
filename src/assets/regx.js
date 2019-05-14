@@ -139,9 +139,9 @@ export default {
     return {
       origin: str.trim().slice(),
       new: str.trim(),
-      _raw: objc === null ? '': this.removeDoubleQuotes(objc[0]),
-      text: objc === null ? '': this.removeDoubleQuotes(objc[0]),
-      model: objc === null ? '': this.removeDoubleQuotes(objc[0]),
+      _raw: objc === null ? '': objc[0],
+      text: objc === null ? '': objc[0],
+      model: objc === null ? '': objc[0],
       color: objc === null ? '': this.removeDoubleQuotes(comSprtr[comSprtr.length-1]),
     }
   },
