@@ -15,7 +15,7 @@ if (prod === 'local') {
 }
 
 if (prod === 'dev') {
-  _apiroute       = 'https://quiet-falls-24566.herokuapp.com/api/'
+  _apiroute       = 'http://admin.homeprezzo.com/api/api/'
   _signed         = 'http://localhost:8000/api/signed/'
   _localapiroute  = 'http://localhost:8000/api/'
   _pub            = 'http://localhost:8080/'

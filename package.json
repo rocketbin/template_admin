@@ -1,6 +1,6 @@
 {
   "name": "template-admin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "HomePrezzo admin controls",
   "productName": "Homeprezzo",
   "cordovaId": "org.cordova.quasar.app",
