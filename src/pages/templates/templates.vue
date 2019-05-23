@@ -42,7 +42,7 @@
           style = "font-size:80%;margin:5px"
         />
           
-        <q-btn round icon="add_circle"  color ="primary" style = "margin:5px"  @click="_modals({'newTemplate':{'open': true, 'data': '', id: 0}})">
+        <q-btn round icon="add_circle" color ="primary" style = "margin:5px"  @click="addNew()">
           <q-tooltip> 
             New
           </q-tooltip>
@@ -122,7 +122,10 @@ export default {
   methods: {
     ...mapActions(['_modals', '_config']),
     newTemp (row) {
-      this._modals({'newTemplate':{'open': true, 'data': row.data, 'id': row.js_id}})
+      this._modals({'newTemplate':{'open': true, 'data': row.data, 'raw': row.raw, 'id': row.js_id, 'title': `update ${row.filename}`}})
+    },
+    addNew () {
+      this._modals({'newTemplate':{'open': true, 'data': '', id: 0, 'title': 'Add Template', callback: this.setCallback  } })
     },
     nextPage() {
       this.paginationControl.page = this.paginationControl.page + 1;
@@ -131,6 +134,11 @@ export default {
         filter: this.filter
       })
     },
+    setCallback(scene) {
+      this.data.unshift(scene);
+      // console.log(data, this.data)
+    },
+
     loadTableData({ pagination, filter }) {
       this.tableLoad = true
       _purl.get(route.scenes.get, {page: pagination.page, search: filter}).then (r => {
@@ -157,7 +165,6 @@ export default {
           res.val = JSON.parse(res.val);
           return res;
         })
-        console.log(r.data)
         this._config({'templates': {'types': r.data}});
       }).catch(e => {
         Loading.hide()

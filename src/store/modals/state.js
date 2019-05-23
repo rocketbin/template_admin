@@ -11,6 +11,7 @@ export default {
     newTemplate: {
       open: false,
       data: '',
+      title: '',
       id: 0
     },
     selectColor: {

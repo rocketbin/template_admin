@@ -6,6 +6,7 @@ const images = /(.*src.*)/m
 const parentPar = /[^\(]*(\(.*\))[^\)]*/mi
 const parenthesis = /\(([^)]+)\)/mi
 const camma = /([^,]+)/
+const comments = /\/{2}.*?$/mgi
 export default {
   /*
    * return as error
@@ -180,23 +181,74 @@ export default {
       id: this.removeDoubleQuotes(objc[1])
     }
   },
+  /* removes the function wrapping of a scene*/
+  removeFunctionWrapping (str) {
+
+    if(str.includes('(function (cjs, an) {')) {
+      let newStr = str.replace('(function (cjs, an) {', '')
+      let rep    = newStr.replace('})(createjs = createjs||{}, AdobeAn = AdobeAn||{});', '')
+      return this.removeComments(rep.replace('var createjs, AdobeAn;', ''));
+    } else {
+      return str;
+    }
+  },
+  /* removes the comments*/
+  removeComments (str) {
+    let m;
+    let mapObj = {};
+    while ((m = comments.exec(str)) !== null) {
+        if (m.index === comments.lastIndex) {
+            comments.lastIndex++;
+        }
+        
+        m.forEach((match, groupIndex) => {
+          Object.assign(mapObj, {[match]: "" });
+        });
+    }
+    return this.replaceAll(str, mapObj);
+
+  },
   /*
    * 
   */
   RippedText (str, obj) {
     let textObjs = {};
     obj.texts.map(text => {
-      Object.assign(textObjs, {[text.text]: text.model})
+      let _v = text.text
+      let _m = text.model
+      if(text.text.includes("|")) { //  ======================================>>> this will escape the [pipe] character
+        _v = text.text.replace(/\|/, "[|]")
+        _m = text.model.replace(/\|/, "[|]")
+      }
+      if(text.text.includes("\\")) { //  =====================================>>> this will escape the [backslash] character
+        _v = _v.replace(/\\/, "\\\\") 
+        _m = _m.replace(/\\/, "\\\\")
+      }
+      Object.assign(textObjs, {[_v]: text.model}) //  ========================>>> this is where it reconstruct the object that will be changed 
     })
     obj.colors.data.map(color => {
       Object.assign(textObjs, {[color.original]: `json[lib.group_uuid].colorpalette[${color.type}]`})
     })
-    return this.replaceAll(str, textObjs);
+    return this.replaceAll(str, textObjs)
   },
    replaceAll(str,mapObj) {
+    console.log(mapObj) // ==================================================>>> this will display the strings needed to be found and replaced
     var re = new RegExp(Object.keys(mapObj).join("|"),"gmi");
     return str.replace(re, function(matched){
-        return mapObj[matched];
+      console.log(matched) // ===============================================>>> this will display all the match found in the console
+      if(matched.includes('|')) {
+        matched = matched.replace(/\|/, "[|]")
+      }
+      if(matched.includes("\\")) {
+        matched = matched.replace(/\\/, "\\\\")
+      }
+      return mapObj[matched];// =============================================>>> this is the part where it replaces the values of matched
     });
+  },
+  scapeString(str) {
+    // if(str.includes('\|'))
+    //   return str.replace('\|', '\\|')
+    // else
+      return str
   }
 }

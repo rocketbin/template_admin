@@ -45,7 +45,7 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown :label = "color.shade" style = "margin-left:5px" >
+<!--           <q-btn-dropdown :label = "color.shade" style = "margin-left:5px" >
             <q-list  highlight>
               <q-item @click.native="color.shade = -20" v-close-overlay style="cursor:pointer">
                 <q-item-main>
@@ -76,7 +76,7 @@
               </q-item>
 
             </q-list>
-          </q-btn-dropdown>
+          </q-btn-dropdown> -->
 
           <q-btn-dropdown :label = "color.tint" style = "margin-left:5px" content-style="width:220px;padding: 20px 8px;">
             <div style = "margin:10px">
@@ -117,7 +117,7 @@ export default{
     },
     'colors_': {
       handler (value) {
-        console.log(value)
+        // console.log(value)
       },
       deep:true
     }

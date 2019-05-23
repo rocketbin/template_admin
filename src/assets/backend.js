@@ -16,11 +16,11 @@ if (prod === 'local') {
 
 if (prod === 'dev') {
   _apiroute       = 'http://admin.homeprezzo.com/api/api/'
-  _signed         = 'http://localhost:8000/api/signed/'
-  _localapiroute  = 'http://localhost:8000/api/'
+  _signed         = 'http://admin.homeprezzo.com/api/api/'
+  _localapiroute  = 'http://admin.homeprezzo.com/api/'
   _pub            = 'http://localhost:8080/'
-  _loginchecker   =  'http://localhost:8000/api/'
-  _storage        = 'https://quiet-falls-24566.herokuapp.com/storage/'
+  _loginchecker   = 'http://localhost:8000/api/'
+  _storage        = 'http://admin.homeprezzo.com/api/storage/'
 }
 
 if (prod === 'live') {

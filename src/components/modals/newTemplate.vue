@@ -10,38 +10,35 @@
         icon="keyboard_arrow_left"
       />
       <q-toolbar-title>
-        Add Template
+        {{title}}
       </q-toolbar-title>
     </q-toolbar>
 
     <div class="layout-padding ">
-      <div style = "display:flex; justify-content:space-around; margin:12px">
-        <q-toggle v-model="checked" icon="cloud_upload" :label="toggleLabel"  />
-        <q-btn-dropdown outline split :label="subtype"  >
-          <!-- dropdown content -->
-          <q-list link>
-            <q-item v-for="type in types" v-close-overlay @click.native="subtype = type.val.display">
-              <q-item-main>
-                <q-item-tile label >{{ type.val.display }}</q-item-tile>
-              </q-item-main>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
-        <q-btn-group outline>
-          <q-btn outline color="dark" icon = "visibility"  @click="processScript">
-            <q-tooltip>
-              preview
-            </q-tooltip>
-          </q-btn>
-          <q-btn outline color="dark" icon = "save"  @click = "saveScript">
-            <q-tooltip>
-              save
-            </q-tooltip>
-          </q-btn>
-        </q-btn-group>
+      <div style = "display:flex; margin:12px;justify-content: space-between;">
+        <div >
+          <q-btn-dropdown outline split :label="subtype" style = "margin-right:10px">
+            <!-- dropdown content -->
+            <q-list link>
+              <q-item v-for="type in types" v-close-overlay @click.native="subtype = type.val.display">
+                <q-item-main>
+                  <q-item-tile label >{{ type.val.display }}</q-item-tile>
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+          <q-toggle v-model="checked" icon="cloud_upload" :label="toggleLabel"  />
+        </div>
+        <div >
+          <q-btn-group outline >
+            <q-btn outline color="dark" label = "replace"  @click="processScript"/>
+            <q-btn outline color="dark" label = "preview"  @click="processScript"/>
+            <q-btn outline color="dark" label = "save"  @click = "saveScript"/>
+          </q-btn-group>
+        </div>
       </div>
       <q-input
-        v-model="script"
+        v-model="datascript"
         type="textarea"
         float-label="Raw JS animation"
         :max-height="100"
@@ -99,11 +96,21 @@ export default {
     'modalStatus':function (val) {
       if(val && this.newTemplateModal.id > 0) {
         this.loadUpdateTemplate()
+      } else {
+        this.id           = 0
+        this.script       = ''
+        this.oldScript    = ''
+        this.scriptname   = ''
+        this.title        = 'Add Template'
+        this.animatProps  = {}
+        this.textdata     = []
+        this.imagedata    = []
+        this.colordata    = []
       }
     },
     'animatProps': {
       handler (value) {
-          console.log(value)
+          // console.log(value)
           // this.script = regxStr.reconstructText(this.script, value)
       },
       deep: true
@@ -131,9 +138,9 @@ export default {
     },
     toggleLabel() {
       if(this.checked) {
-        return 'JS'
+        return 'upload'
       } else {
-        return 'raw'
+        return 'input'
       }
     },
     modalStatus () {
@@ -153,12 +160,14 @@ export default {
   data() {
     return {
       checked: true,
+      title: 'Add Template',
       multi: false,
       scriptid: 0,
       subtype: 'Type',
       image: '',
       oldScript: '',
       script: '',
+      datascript: '',
       scriptname: '',
       animatProps: {},
       textdata: [],
@@ -174,17 +183,17 @@ export default {
       '_colors',
     ]),
     saveScript() {
-      // console.log(regxStr.RippedText(this.script, this.animatProps))
-      console.log(regxStr.RippedText(this.script, this.animatProps))
+      this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText(this.datascript, this.animatProps))
       if( this.scriptid === undefined || Number(this.scriptid) <= 0) {
         _purl.post(route.jsscenes.store, {
           filename: this.scriptname,
           reftype: 'raw',
-          data: regxStr.RippedText(this.script, this.animatProps),
-          raw: this.script,
+          data: regxStr.removeFunctionWrapping(regxStr.RippedText(this.datascript, this.animatProps)),
+          raw: regxStr.removeFunctionWrapping(this.script),
           config: JSON.stringify(this.animatProps)
         }).then(r => {
           this.scriptid = r.data.js_id
+          this.modals.newTemplate.callback(r.data)
           _glob.notify('data has been created', 'positive')
         })
       } else {
@@ -235,13 +244,21 @@ export default {
       this.submitscript()
     },
     loadUpdateTemplate () {
-      this.scriptid = this.newTemplateModal.id
-      this.script = this.newTemplateModal.data
-      this.checked = false
+      this.scriptid   = this.newTemplateModal.id
+      this.datascript = this.newTemplateModal.data 
+      this.script     = this.newTemplateModal.raw 
+      this.title      = this.newTemplateModal.title
+      this.checked    = false
     },
     processScript () {
-      this.script = regxStr.reconstructText(this.oldScript, this.animatProps)
-      this.oldScript = this.script
+      // regxStr.removeFunctionWrapping()
+
+      this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps))
+      this.oldScript = this.datascript
+      this.animatProps.texts.map(text => {
+        text.text = text.model
+      })
+      console.log(this.animatProps)
     },
     filePut (files) {
       setTimeout(() => {
@@ -257,7 +274,8 @@ export default {
     },
     submitscript() {
       // let _cs          = regxStr.map_hex_colors(this.script)
-      this.animatProps = regxStr.getProperties(this.script)
+      this.datascript  = regxStr.removeFunctionWrapping(this.script)
+      this.animatProps = regxStr.getProperties(this.datascript)
       this.textdata    = this.animatProps.texts
       this.imagedata   = this.animatProps.images
       this.colordata   = this.animatProps.colors
@@ -271,6 +289,5 @@ export default {
 
     // console.log(json)
   }
-
 }
 </script>
