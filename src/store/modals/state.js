@@ -3,7 +3,7 @@ export default {
     confirm: {
       open: false,
       label: '',
-      callback: () => {},
+      buttons: [],
     },
     addTemplate: {
       open: false

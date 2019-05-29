@@ -110,7 +110,7 @@ export default {
     },
     'animatProps': {
       handler (value) {
-          // console.log(value)
+          console.log(value)
           // this.script = regxStr.reconstructText(this.script, value)
       },
       deep: true
@@ -183,27 +183,33 @@ export default {
       '_colors',
     ]),
     saveScript() {
-      this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText(this.datascript, this.animatProps))
       if( this.scriptid === undefined || Number(this.scriptid) <= 0) {
-        _purl.post(route.jsscenes.store, {
-          filename: this.scriptname,
-          reftype: 'raw',
-          data: regxStr.removeFunctionWrapping(regxStr.RippedText(this.datascript, this.animatProps)),
-          raw: regxStr.removeFunctionWrapping(this.script),
-          config: JSON.stringify(this.animatProps)
-        }).then(r => {
-          this.scriptid = r.data.js_id
-          this.modals.newTemplate.callback(r.data)
-          _glob.notify('data has been created', 'positive')
-        })
+        this.newScript()
       } else {
-        _purl.post(route.jsscenes.update(this.scriptid), {
-          data: regxStr.RippedText(this.script, this.animatProps),
-          config: JSON.stringify(this.animatProps)
-        }).then(r => {
-          // _glob.notify('data has been updated', 'positive')
-        })
+        this.confirmNewScript()
       }
+    },
+    newScript() {
+      _purl.post(route.jsscenes.store, {
+        filename: this.scriptname,
+        reftype: 'raw',
+        data: regxStr.removeFunctionWrapping(regxStr.RippedText(this.datascript, this.animatProps)),
+        raw: regxStr.removeFunctionWrapping(this.script),
+        config: JSON.stringify(this.animatProps)
+      }).then(r => {
+        this.scriptid = r.data.js_id
+        this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps))
+        this.modals.newTemplate.callback(r.data)
+        _glob.notify('data has been created', 'positive')
+      })
+    },
+    updateScript () {
+      _purl.post(route.jsscenes.update(this.scriptid), {
+        data: regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps)),
+        config: JSON.stringify(this.animatProps)
+      }).then(r => {
+        this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps))
+      })
     },
     uploadFail (file, xhr) {
       this.$refs.uploader.files.map((_f, ind) => {
@@ -219,6 +225,8 @@ export default {
       }, 200)
     },
     attachFile(file, xhr) {
+      // console.log(file)
+      this.title = file.name
       let res = JSON.parse(xhr.response)
       this.script  = res.data
       this.scriptname  = res.name
@@ -234,9 +242,24 @@ export default {
     },
     confirmNewScript () {
       this._modals({'confirm': {
-        'open' : true,
-        'label' : 'The system has detected a new script, do you want to save it as a new raw ?',
-        'callback' : this.newTemplateContent(),
+        'open'    : true,
+        'label'   : 'The system has detected a new script, do you want to save it as a new scene ?',
+        'buttons' : [
+          {
+            'label'   : false,
+            'icon'    : 'fas fa-pen-square',
+            'color'   : 'warning',
+            'action'  : this.updateScript,
+            'tooltip' : 'update'
+          },
+          {
+            'label': false,
+            'icon' : 'fas fa-save',
+            'color' : 'primary',
+            'action' : this.newScript,
+            'tooltip' : 'save new scene'
+          },
+        ],
       }});
     },
     newTemplateContent () {
@@ -245,18 +268,20 @@ export default {
     },
     loadUpdateTemplate () {
       this.scriptid   = this.newTemplateModal.id
-      this.datascript = this.newTemplateModal.data 
+      this.datascript = this.newTemplateModal.data
       this.script     = this.newTemplateModal.raw 
       this.title      = this.newTemplateModal.title
       this.checked    = false
     },
     processScript () {
-      // regxStr.removeFunctionWrapping()
-
+      // regxStr.removeComments(this.datascript)
       this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps))
       this.oldScript = this.datascript
       this.animatProps.texts.map(text => {
         text.text = text.model
+      })
+      this.animatProps.colors.data.map(color => {
+        // text.text = text.model
       })
       console.log(this.animatProps)
     },
@@ -274,7 +299,7 @@ export default {
     },
     submitscript() {
       // let _cs          = regxStr.map_hex_colors(this.script)
-      this.datascript  = regxStr.removeFunctionWrapping(this.script)
+      this.datascript  = this.script.slice()
       this.animatProps = regxStr.getProperties(this.datascript)
       this.textdata    = this.animatProps.texts
       this.imagedata   = this.animatProps.images

@@ -6,7 +6,8 @@ const images = /(.*src.*)/m
 const parentPar = /[^\(]*(\(.*\))[^\)]*/mi
 const parenthesis = /\(([^)]+)\)/mi
 const camma = /([^,]+)/
-const comments = /\/{2}.*?$/mgi
+const comments = /\/{2}.*?$/gmi
+const tintedColor = /(getTintedColor?)([^\s]+)/gm
 export default {
   /*
    * return as error
@@ -34,13 +35,21 @@ export default {
   map_hex_colors (str) {
     if(hexa.test(str)) {
       let matches = str.match(hexa);
+      if(tintedColor.test(str)) {
+        let tints = str.match(tintedColor)
+        tints.map(tnt => {
+          matches.push(tnt)
+        })
+      }
       if(matches) {
         let _m = matches.filter((v,i) => matches.indexOf(v) === i)
+        console.log(_m)
         return {
           success: true,
-          data: _m.map(m => {
+          data: _m.map((m, ind) => {
             return {
-              original: m,
+              ind: ind,
+              original: '"' + m + '"',
               color: this.hexToRgbA(m),
               type: 0,
               shade: 20,
@@ -143,7 +152,7 @@ export default {
       _raw: objc === null ? '': objc[0],
       text: objc === null ? '': objc[0],
       model: objc === null ? '': objc[0],
-      color: objc === null ? '': this.removeDoubleQuotes(comSprtr[comSprtr.length-1]),
+      color: objc === null ? '': comSprtr[comSprtr.length-1],
     }
   },
   reconstructText (str, obj) {
@@ -183,72 +192,66 @@ export default {
   },
   /* removes the function wrapping of a scene*/
   removeFunctionWrapping (str) {
-
     if(str.includes('(function (cjs, an) {')) {
       let newStr = str.replace('(function (cjs, an) {', '')
       let rep    = newStr.replace('})(createjs = createjs||{}, AdobeAn = AdobeAn||{});', '')
       return this.removeComments(rep.replace('var createjs, AdobeAn;', ''));
     } else {
-      return str;
+      return this.removeComments(str);
     }
   },
   /* removes the comments*/
   removeComments (str) {
     let m;
     let mapObj = {};
-    while ((m = comments.exec(str)) !== null) {
-        if (m.index === comments.lastIndex) {
-            comments.lastIndex++;
-        }
-        
-        m.forEach((match, groupIndex) => {
-          Object.assign(mapObj, {[match]: "" });
-        });
+    if ( comments.test(str) ) {
+      str.match(comments).map(match => { 
+        Object.assign(mapObj, {[match]: "_" })
+      })
+      return this.replaceAll(str, mapObj)
+    } else {
+      return str
     }
-    return this.replaceAll(str, mapObj);
 
   },
   /*
    * 
   */
+  escapeStrRegExp (text) {
+    text = text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    return(text)
+  },
+
   RippedText (str, obj) {
-    let textObjs = {};
+    let textObjs = {}
+    let escStr = this.escapeStrRegExp
     obj.texts.map(text => {
-      let _v = text.text
-      let _m = text.model
-      if(text.text.includes("|")) { //  ======================================>>> this will escape the [pipe] character
-        _v = text.text.replace(/\|/, "[|]")
-        _m = text.model.replace(/\|/, "[|]")
-      }
-      if(text.text.includes("\\")) { //  =====================================>>> this will escape the [backslash] character
-        _v = _v.replace(/\\/, "\\\\") 
-        _m = _m.replace(/\\/, "\\\\")
-      }
-      Object.assign(textObjs, {[_v]: text.model}) //  ========================>>> this is where it reconstruct the object that will be changed 
+      let _t = escStr(text.text);
+      Object.assign(textObjs, {[_t]: text.model}) 
     })
-    obj.colors.data.map(color => {
-      Object.assign(textObjs, {[color.original]: `json[lib.group_uuid].colorpalette[${color.type}]`})
+    obj.colors.data.map((color, index) => {
+      Object.assign(textObjs, {[escStr(color.original)]: ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[${color.type}], ${color.ind}), ${color.tint}) `})
+      color.original = ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[${color.type}], ${color.ind}), ${color.tint}) `
     })
     return this.replaceAll(str, textObjs)
   },
    replaceAll(str,mapObj) {
-    console.log(mapObj) // ==================================================>>> this will display the strings needed to be found and replaced
+    let escStr = this.escapeStrRegExp
+    let escDQ = this.removeDoubleQuotes
     var re = new RegExp(Object.keys(mapObj).join("|"),"gmi");
     return str.replace(re, function(matched){
-      console.log(matched) // ===============================================>>> this will display all the match found in the console
-      if(matched.includes('|')) {
-        matched = matched.replace(/\|/, "[|]")
+      if(/[-[\]{}()*+?.,\\^$|#\s]/g.test(matched)) {
+        matched = escStr(matched)
       }
-      if(matched.includes("\\")) {
-        matched = matched.replace(/\\/, "\\\\")
+      if(mapObj[matched] === undefined) {
+        return " "
       }
-      return mapObj[matched];// =============================================>>> this is the part where it replaces the values of matched
+      // if(mapObj[matched].includes('json[')) {
+      //   console.log(escDQ(mapObj[matched]))
+      //   return escDQ(mapObj[matched])
+      // }
+      return mapObj[matched];
     });
-  },
-  scapeString(str) {
-    // if(str.includes('\|'))
-    //   return str.replace('\|', '\\|')
-    // else
-      return str
   }
 }
+
