@@ -275,15 +275,11 @@ export default {
     },
     processScript () {
       // regxStr.removeComments(this.datascript)
-      this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps))
+      this.datascript = regxStr.removeFunctionWrapping(regxStr.RippedText( this.datascript, this.animatProps ))
       this.oldScript = this.datascript
       this.animatProps.texts.map(text => {
         text.text = text.model
       })
-      this.animatProps.colors.data.map(color => {
-        // text.text = text.model
-      })
-      console.log(this.animatProps)
     },
     filePut (files) {
       setTimeout(() => {

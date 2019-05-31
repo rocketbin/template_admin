@@ -8,6 +8,15 @@ const parenthesis = /\(([^)]+)\)/mi
 const camma = /([^,]+)/
 const comments = /\/{2}.*?$/gmi
 const tintedColor = /(getTintedColor?)([^\s]+)/gm
+const paramImages = /\(lib.(.*) =[\s\S]*Bitmap\(\)\;[\s\S]*Rectangle\(0,0,(\d*),(\d*).*\)/gm
+const headerText = /\(function \(([\s\S]*?)\/\/ symbols:$/gm
+const headerSize = /Rectangle\(0,0,(\d*),(\d*).*\)/
+const headerTitle = /photo(.\S*)/
+const footerText = /\lib.properties ([\s\S]*?)AdobeAn;$/gm
+const sceneTitle = /\/\/ stage content:[.\s]*\(lib.(.*) =/gm
+const matrix = /\(img\.(.*), null, (.*)\)\.s/gm
+const mtr = /Matrix2D([\s\S]*?)\)/g
+const mtrxName = /img.photo([\S]*?)\,/g
 export default {
   /*
    * return as error
@@ -23,10 +32,32 @@ export default {
     let colors = this.map_hex_colors(str);
     let texts = this.conv_strs(this.map_str(str)['data']);
     let images = this.map_images(str);
+    let matrix = this.map_matrix(str);
     return {
       colors,
       texts,
-      images
+      images,
+      matrix
+    }
+  },
+  map_matrix(str) {
+    if(matrix.test(str)) {
+      let matches = str.match(matrix)
+      return matches.map(mtc => {
+        return this.objectifyMtr(mtc)
+      })
+    } else {
+      return this.returnFalseState()
+    }
+  },
+  objectifyMtr (mtc) {
+    if(mtr.test(mtc)) {
+      let tr = mtc.match(mtr)
+      let trName = mtc.match(mtrxName)
+      return {
+        param: tr[0], 
+        name: trName[0]
+      }
     }
   },
   /*
@@ -43,7 +74,6 @@ export default {
       }
       if(matches) {
         let _m = matches.filter((v,i) => matches.indexOf(v) === i)
-        console.log(_m)
         return {
           success: true,
           data: _m.map((m, ind) => {
@@ -170,12 +200,13 @@ export default {
    * images search
   */
   map_images (str) {
-    let matches = str.match(images);
-    if(matches) {
-      let _m = matches.filter((v,i) => matches.indexOf(v) === i)
-      return _m.map(m => this.objectizeImg(m))
-    }
-    else {
+    if(paramImages.test(str)) {
+      let res = [];
+      let matches = str.match(paramImages);
+      return matches.map(mt => {
+        return this.objectifyImg(mt);
+      })
+    } else {
       return []
     }
   },
@@ -183,19 +214,28 @@ export default {
   /*
    * images search
   */
-  objectizeImg (str) {
-    let objc = str.match(quoted)
+  objectifyImg (img) {
+    let title = img.match(headerTitle)
+    let size = img.match(headerSize)
     return {
-      path: this.removeDoubleQuotes(objc[0]),
-      id: this.removeDoubleQuotes(objc[1])
+      // path: this.removeDoubleQuotes(objc[0]),
+      id: title[0],
+      sizeOrigin:size[0],
+      _sizeOrigin:size[0],
+      width: size[1],
+      _width: size[1],
+      height: size[2],
+      _height: size[2],
+      distort:false,
+      fill:false,
     }
   },
   /* removes the function wrapping of a scene*/
   removeFunctionWrapping (str) {
-    if(str.includes('(function (cjs, an) {')) {
-      let newStr = str.replace('(function (cjs, an) {', '')
-      let rep    = newStr.replace('})(createjs = createjs||{}, AdobeAn = AdobeAn||{});', '')
-      return this.removeComments(rep.replace('var createjs, AdobeAn;', ''));
+    if(headerText.test(str)) {
+      let newStr = str.replace(headerText, '')
+      return newStr.replace(footerText, '')
+      // return this.removeComments(rep.replace('var createjs, AdobeAn;', ''));
     } else {
       return this.removeComments(str);
     }
@@ -230,9 +270,18 @@ export default {
       Object.assign(textObjs, {[_t]: text.model}) 
     })
     obj.colors.data.map((color, index) => {
-      Object.assign(textObjs, {[escStr(color.original)]: ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[${color.type}], ${color.ind}), ${color.tint}) `})
-      color.original = ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[${color.type}], ${color.ind}), ${color.tint}) `
+      Object.assign(textObjs, {[escStr(color.original)]: ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[0], ${color.type}), ${color.tint}) `})
+      color.original = ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[0], ${color.type}), ${color.tint}) `
     })
+    obj.images.map((img, ind) => {
+      Object.assign(textObjs, {[escStr(img.sizeOrigin)]: `Rectangle(0,0,img.photo.naturalWidth,img.photo.naturalHeight)`})
+      img.sizeOrigin = `Rectangle\(0,0,img.photo.naturalWidth,img.photo.naturalHeight\)`
+    })
+    obj.matrix.map((matrix, ind) => {
+      Object.assign(textObjs, {[escStr(matrix.param)]: `lib.properties.scalableBitmapFill(img.photo, {width: 1439.6, height: 1058.8}, 0, 0, false, true)`})
+      matrix.param = `lib.properties.scalableBitmapFill(img.photo, {width: 1439.6, height: 1058.8}, 0, 0, false, true)`
+    })
+    // console.log(textObjs)
     return this.replaceAll(str, textObjs)
   },
    replaceAll(str,mapObj) {

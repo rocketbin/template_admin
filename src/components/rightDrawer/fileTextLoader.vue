@@ -4,12 +4,27 @@
       <q-list highlight>
         <q-list-header>Images</q-list-header>
         <q-item>
-          <q-item-main :label="img.id"  />
+          <q-item-side avatar="statics/def.png" />
+          <q-item-main   >
+            <small>{{ img.id }}</small>
+            <div class = "flex" style = "justify-content:space-between" >
+              <div>
+                <q-input v-model="img._width" float-label="width" />
+              </div>
+              <div>
+                <q-input v-model="img._height" float-label="height" />
+              </div>
+            </div>
+          </q-item-main>
           <q-item-side right>
-            <!-- <q-item-tile icon="collections" color="green" /> -->
-            <q-btn-dropdown label = "0" style = "margin-left:5px" >
-
-            </q-btn-dropdown>
+            <div class = "flex" style="align-items:baseline">
+              <div>
+                <q-checkbox v-model="img.distort" label="distort" />
+              </div>
+              <div>
+                <q-checkbox v-model="img.fill" label="fill" />
+              </div>
+            </div>
           </q-item-side>
         </q-item>
       </q-list>
@@ -18,6 +33,11 @@
 </template>
 <script>
 export default {
-  props: ['imagedata']
+  props: ['imagedata'],
+  data () { 
+    return {
+      checked: true
+    }
+  }
 }
 </script>
