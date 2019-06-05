@@ -8,15 +8,15 @@ const parenthesis = /\(([^)]+)\)/mi
 const camma = /([^,]+)/
 const comments = /\/{2}.*?$/gmi
 const tintedColor = /(getTintedColor?)([^\s]+)/gm
-const paramImages = /\(lib.(.*) =[\s\S]*Bitmap\(\)\;[\s\S]*Rectangle\(0,0,(\d*),(\d*).*\)/gm
+const paramImages = /\(lib.(.*) [\s\S]*?(Bitmap)\(\)\;[\s\S]*?(Rectangle)\(0,0,(\d*),(\d*)\)/gm
 const headerText = /\(function \(([\s\S]*?)\/\/ symbols:$/gm
 const headerSize = /Rectangle\(0,0,(\d*),(\d*).*\)/
 const headerTitle = /photo(.\S*)/
 const footerText = /\lib.properties ([\s\S]*?)AdobeAn;$/gm
 const sceneTitle = /\/\/ stage content:[.\s]*\(lib.(.*) =/gm
 const matrix = /\(img\.(.*), null, (.*)\)\.s/gm
-const mtr = /Matrix2D([\s\S]*?)\)/g
-const mtrxName = /img.photo([\S]*?)\,/g
+const mtr = /Matrix2D([\s\S]*?)\)/gm
+const mtrxName = /img\.([\S]*?)\,/gm
 export default {
   /*
    * return as error
@@ -32,7 +32,7 @@ export default {
     let colors = this.map_hex_colors(str);
     let texts = this.conv_strs(this.map_str(str)['data']);
     let images = this.map_images(str);
-    let matrix = this.map_matrix(str);
+    let matrix = [];
     return {
       colors,
       texts,
@@ -50,14 +50,61 @@ export default {
       return this.returnFalseState()
     }
   },
+
   objectifyMtr (mtc) {
     if(mtr.test(mtc)) {
       let tr = mtc.match(mtr)
       let trName = mtc.match(mtrxName)
-      return {
+      return { 
         param: tr[0], 
-        name: trName[0]
+        name: trName[0],
+        origin: mtc,
+        _origin: mtc,
       }
+    }
+  },
+
+  /*
+   * images search
+  */
+  map_images (str) {
+    if(paramImages.test(str)) {
+      let res = [];
+      let matches = str.match(paramImages);
+      let matrix  = this.map_matrix(str)
+      return matches.map((mt) => {
+        return this.objectifyImg(mt, matrix);
+      })
+    } else {
+      return []
+    }
+  },
+
+  /*
+   * images search
+  */
+  objectifyImg (img, matrix) {
+    let title = img.match(/lib(.\S*)/)
+    let size = img.match(headerSize)
+    let _title = title[1].substring(1)
+    let mt = matrix.filter((v, i) => {
+      if(v.name.indexOf(_title) > 0) {
+        return v
+      }
+    })
+    // console.log(_title,mt);
+    return {
+      // path: this.removeDoubleQuotes(objc[0]),
+      matrix: mt[0] ,
+      id: _title,
+      sizeOrigin:size[0],
+      _sizeOrigin:size[0],
+      width: size[1],
+      _width: size[1],
+      height: size[2],
+      _height: size[2],
+      distort:false,
+      fill:false,
     }
   },
   /*
@@ -196,40 +243,6 @@ export default {
     return newStr;
   },
 
-  /*
-   * images search
-  */
-  map_images (str) {
-    if(paramImages.test(str)) {
-      let res = [];
-      let matches = str.match(paramImages);
-      return matches.map(mt => {
-        return this.objectifyImg(mt);
-      })
-    } else {
-      return []
-    }
-  },
-
-  /*
-   * images search
-  */
-  objectifyImg (img) {
-    let title = img.match(headerTitle)
-    let size = img.match(headerSize)
-    return {
-      // path: this.removeDoubleQuotes(objc[0]),
-      id: title[0],
-      sizeOrigin:size[0],
-      _sizeOrigin:size[0],
-      width: size[1],
-      _width: size[1],
-      height: size[2],
-      _height: size[2],
-      distort:false,
-      fill:false,
-    }
-  },
   /* removes the function wrapping of a scene*/
   removeFunctionWrapping (str) {
     if(headerText.test(str)) {
@@ -274,14 +287,13 @@ export default {
       color.original = ` getTintedColor(lib.properties.color(json[lib.group_uuid].colorpalette[0], ${color.type}), ${color.tint}) `
     })
     obj.images.map((img, ind) => {
+      console.log(img.matrix.origin)
       Object.assign(textObjs, {[escStr(img.sizeOrigin)]: `Rectangle(0,0,img.photo.naturalWidth,img.photo.naturalHeight)`})
       img.sizeOrigin = `Rectangle\(0,0,img.photo.naturalWidth,img.photo.naturalHeight\)`
-    })
-    obj.matrix.map((matrix, ind) => {
-      Object.assign(textObjs, {[escStr(matrix.param)]: `lib.properties.scalableBitmapFill(img.photo, {width: 1439.6, height: 1058.8}, 0, 0, false, true)`})
-      matrix.param = `lib.properties.scalableBitmapFill(img.photo, {width: 1439.6, height: 1058.8}, 0, 0, false, true)`
-    })
-    // console.log(textObjs)
+      Object.assign(textObjs, {[escStr(img.matrix.origin)]: `(img.${img.id},null,lib.properties.scalableBitmapFill(${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`})
+      img.matrix.origin =`(img.${img.id},null,lib.properties.scalableBitmapFill(${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`
+    });
+    console.log(textObjs)
     return this.replaceAll(str, textObjs)
   },
    replaceAll(str,mapObj) {
@@ -295,10 +307,6 @@ export default {
       if(mapObj[matched] === undefined) {
         return " "
       }
-      // if(mapObj[matched].includes('json[')) {
-      //   console.log(escDQ(mapObj[matched]))
-      //   return escDQ(mapObj[matched])
-      // }
       return mapObj[matched];
     });
   }
