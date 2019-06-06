@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-for="img in imagedata">
+    <div >
       <q-list highlight>
         <q-list-header>Images</q-list-header>
-        <q-item>
+        <q-item v-for="img in imagedata">
           <q-item-side avatar="statics/def.png" />
           <q-item-main   >
             <small>{{ img.id }}</small>

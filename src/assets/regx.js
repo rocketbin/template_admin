@@ -288,10 +288,10 @@ export default {
     })
     obj.images.map((img, ind) => {
       console.log(img.matrix.origin)
-      Object.assign(textObjs, {[escStr(img.sizeOrigin)]: `Rectangle(0,0,img.photo.naturalWidth,img.photo.naturalHeight)`})
-      img.sizeOrigin = `Rectangle\(0,0,img.photo.naturalWidth,img.photo.naturalHeight\)`
-      Object.assign(textObjs, {[escStr(img.matrix.origin)]: `(img.${img.id},null,lib.properties.scalableBitmapFill(${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`})
-      img.matrix.origin =`(img.${img.id},null,lib.properties.scalableBitmapFill(${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`
+      Object.assign(textObjs, {[escStr(img.sizeOrigin)]: `Rectangle(0,0,img.${img.id}.naturalWidth,img.${img.id}.naturalHeight)`})
+      img.sizeOrigin = `Rectangle\(0,0,img.${img.id}.naturalWidth,img.${img.id}.naturalHeight\)`
+      Object.assign(textObjs, {[escStr(img.matrix.origin)]: `(img.${img.id},null,lib.properties.scalableBitmapFill(img.${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`})
+      img.matrix.origin =`(img.${img.id},null,lib.properties.scalableBitmapFill(img.${img.id}, {width: ${img._width}, height: ${img._height}}, 0, 0, ${img.distort}, ${img.fill})).s`
     });
     console.log(textObjs)
     return this.replaceAll(str, textObjs)
